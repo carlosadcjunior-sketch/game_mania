@@ -160,6 +160,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
+            white-space: nowrap;
         }
 
         .btn-action:hover {
@@ -458,6 +459,75 @@
             color: var(--text-muted);
         }
 
+        /* FORMAS DE PAGAMENTO */
+        .payment-block {
+            grid-column: span 12;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .payment-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        .payment-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-ui);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .payment-item.destaque {
+            border-color: var(--accent-green);
+        }
+
+        .payment-tag {
+            display: inline-block;
+            background-color: var(--accent-green);
+            color: #0a0e17;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            margin-bottom: 0.6rem;
+        }
+
+        .payment-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        .payment-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .payment-brands {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            margin-top: 0.5rem;
+        }
+
+        .payment-note {
+            margin-top: 1.25rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         /* FOOTER */
         footer {
             background-color: var(--bg-surface);
@@ -528,6 +598,7 @@
             .banner-company, .banner-promo { grid-column: span 12; }
             .product-card { grid-column: span 6; }
             .faq-grid { grid-template-columns: 1fr; }
+            .payment-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-inner { grid-template-columns: 1fr 1fr; }
         }
     </style>
@@ -702,6 +773,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- FORMAS DE PAGAMENTO -->
+        <section class="payment-block" id="pagamentos">
+            <div class="section-title">Formas de Pagamento</div>
+            <p class="payment-subtitle">Escolha a opção que melhor se adapta à sua compra.</p>
+
+            <div class="payment-grid">
+                <div class="payment-item destaque">
+                    <span class="payment-tag">ATÉ 25% OFF</span>
+                    <div class="payment-name">Pix</div>
+                    <div class="payment-desc">Pagamento instantâneo com desconto especial para compras feitas via Pix. Aprovação imediata.</div>
+                </div>
+
+                <div class="payment-item">
+                    <div class="payment-name">Cartão de Crédito</div>
+                    <div class="payment-desc">Parcelamento em até 12x sem juros nas compras acima de R$ 300,00.</div>
+                    <div class="payment-brands">Visa, Mastercard, Elo, American Express</div>
+                </div>
+
+                <div class="payment-item">
+                    <div class="payment-name">Cartão de Débito</div>
+                    <div class="payment-desc">Pagamento à vista com aprovação imediata nas principais bandeiras.</div>
+                    <div class="payment-brands">Visa, Mastercard, Elo</div>
+                </div>
+
+                <div class="payment-item">
+                    <div class="payment-name">Boleto Bancário</div>
+                    <div class="payment-desc">Vencimento em 3 dias úteis. A confirmação do pagamento pode levar até 2 dias úteis.</div>
+                </div>
+            </div>
+
+            <p class="payment-note">Pagamentos processados em ambiente seguro. Valores e condições podem sofrer alterações sem aviso prévio.</p>
+        </section>
     </main>
 
     <footer>
