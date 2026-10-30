@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mania - E-commerce Gamer & Tech</title>
+    <style>
+        :root {
+            --bg-body: #0a0e17;
+            --bg-surface: #111827;
+            --bg-card: #1f2937;
+            --border-ui: #374151;
+            --border-highlight: #10b981;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-green: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.25);
+            --accent-orange: #f59e0b;
+            --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        /* HEADER / TOPO */
+        header {
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-ui);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .header-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 4fr 3fr;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .store-tag {
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-green);
+        }
+
+        /* BUSCA PREDITIVA */
+        .search-block {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-ui);
+            border-radius: 8px;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-ui);
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+        }
+
+        /* AÇÕES DO USUÁRIO */
+        .user-actions-block {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid var(--border-ui);
+            color: var(--text-main);
+            padding: 0.5rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-action:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+
+        .btn-cart {
+            background-color: var(--accent-green);
+            color: #0a0e17;
+            border-color: var(--accent-green);
+        }
+
+        .btn-cart:hover {
+            filter: brightness(1.1);
+            color: #0a0e17;
+            background-color: var(--accent-green);
+        }
+
+        /* CATEGORIAS EM CÍRCULOS */
+        .nav-categories-bar {
+            background-color: var(--bg-body);
+            border-top: 1px solid var(--border-ui);
+            padding: 0.75rem 1rem;
+        }
+
+        .nav-categories-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        .category-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            color: var(--text-muted);
+            min-width: 80px;
+            transition: color 0.2s;
+        }
+
+        .category-circle-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-ui);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .category-node:hover .category-circle-icon {
+            border-color: var(--accent-green);
+            background-color: rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .category-node:hover .category-label {
+            color: var(--accent-green);
+        }
+
+        .category-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* CONTEÚDO PRINCIPAL (GRID 12 COLUNAS) */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        /* BANNERS */
+        .banner-box {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .banner-company {
+            grid-column: span 7;
+        }
+
+        .banner-promo {
+            grid-column: span 5;
+        }
+
+        .badge-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .badge-green {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-orange {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .banner-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .banner-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* SEÇÃO TÍTULO */
+        .section-header {
+            grid-column: span 12;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 1rem;
+            border-bottom: 1px solid var(--border-ui);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* CARDS DE PRODUTOS COM SHORTS */
+        .product-card {
+            grid-column: span 3;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-green);
+        }
+
+        .product-media {
+            background-color: var(--bg-card);
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid var(--border-ui);
+            color: var(--text-muted);
+        }
+
+        .short-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0,0,0,0.6);
+            border: 1px solid var(--border-ui);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .product-media-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-info {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .product-cat {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .product-price-box {
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .product-price {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--accent-green);
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: none;
+            border-top: 1px solid var(--border-ui);
+            color: var(--text-main);
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-add-cart:hover {
+            background-color: var(--accent-green);
+            color: #0a0e17;
+        }
+
+        /* FAQ BLOCK */
+        .faq-block {
+            grid-column: span 12;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-ui);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .faq-q {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .faq-a {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-ui);
+            margin-top: auto;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--accent-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-ui);
+            text-align: center;
+            padding: 1.25rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            .header-top { grid-template-columns: 1fr; }
+            .banner-company, .banner-promo { grid-column: span 12; }
+            .product-card { grid-column: span 6; }
+            .faq-grid { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / TOPO -->
+    <header>
+        <div class="header-top">
+            <div class="brand-block">
+                <span class="store-tag">📍 Loja Física: Centro de São Paulo - SP</span>
+                <a href="index.html" class="logo">GAME <span>MANIA</span></a>
+            </div>
+
+            <div class="search-block">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Busca preditiva (ex: Placa de Vídeo, CPU, Teclado)...">
+                <div id="searchSuggestions" class="search-suggestions">
+                    <div class="suggestion-item">Placa de Vídeo RTX 4070 Ti</div>
+                    <div class="suggestion-item">Processador Intel Core i7 13700K</div>
+                    <div class="suggestion-item">Teclado Mecânico RGB Switch Red</div>
+                    <div class="suggestion-item">Monitor Gamer 240Hz 1ms</div>
+                </div>
+            </div>
+
+            <div class="user-actions-block">
+                <a href="login.html" class="btn-action">👤 Login</a>
+                <a href="#" class="btn-action">📦 Rastrear</a>
+                <a href="#" class="btn-action">🎧 Suporte</a>
+                <a href="#" id="cartButton" class="btn-action btn-cart">🛒 Sacola (<span id="cartCount">0</span>)</a>
+            </div>
+        </div>
+
+        <!-- CATEGORIAS EM CÍRCULOS -->
+        <nav class="nav-categories-bar">
+            <div class="nav-categories-inner">
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">🎮</div>
+                    <span class="category-label">Placas</span>
+                </a>
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">⚡</div>
+                    <span class="category-label">CPU</span>
+                </a>
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">⌨️</div>
+                    <span class="category-label">Teclado</span>
+                </a>
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">🖥️</div>
+                    <span class="category-label">Telas</span>
+                </a>
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">🛠️</div>
+                    <span class="category-label">Monte seu PC</span>
+                </a>
+                <a href="#" class="category-node">
+                    <div class="category-circle-icon">🏷️</div>
+                    <span class="category-label">Oferta Pix</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL (12 COLUNAS) -->
+    <main>
+        <div class="banner-box banner-company">
+            <div>
+                <span class="badge-tag badge-green">Tradição & Confiança</span>
+                <h2 class="banner-title">Direto do Centro de SP para Todo o Brasil</h2>
+                <p class="banner-desc">Referência em hardware gamer na capital paulista, agora expandindo atendimento, garantia e envio rápido com seguro para todos os estados.</p>
+            </div>
+            <a href="#" class="btn-action" style="align-self: flex-start;">Conhecer Nossa História →</a>
+        </div>
+
+        <div class="banner-box banner-promo">
+            <div>
+                <span class="badge-tag badge-orange">Ofertas da Semana</span>
+                <h2 class="banner-title">Até 25% OFF no Pix com Envio Prioritário</h2>
+                <p class="banner-desc">Preços especiais de inauguração da loja online. Garanta seu upgrade com as melhores marcas mundiais em condições exclusivas.</p>
+            </div>
+            <a href="#" class="btn-action" style="align-self: flex-start; border-color: var(--accent-orange); color: var(--accent-orange);">Ver Todas as Ofertas →</a>
+        </div>
+
+        <div class="section-header">
+            <div class="section-title">Produtos em Destaque & Vídeos Shorts</div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Demonstrações reais direto da bancada técnica</span>
+        </div>
+
+        <div class="product-card">
+            <div class="product-media">
+                <span class="short-badge">▶ Short #1</span>
+                <div class="product-media-icon">🎮</div>
+                <span style="font-size: 0.75rem;">Hands-on & Teste</span>
+            </div>
+            <div class="product-info">
+                <span class="product-cat">Hardware / Vídeo</span>
+                <h3 class="product-title">Placa de Vídeo RTX 4070 OC 12GB</h3>
+                <div class="product-price-box">
+                    <span class="price-label">À vista no Pix</span>
+                    <div class="product-price">R$ 4.299,00</div>
+                </div>
+            </div>
+            <button class="btn-add-cart" onclick="addToCart('Placa de Vídeo RTX 4070 OC 12GB')">+ Adicionar à Sacola</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-media">
+                <span class="short-badge">▶ Short #2</span>
+                <div class="product-media-icon">⚡</div>
+                <span style="font-size: 0.75rem;">Benchmark Real</span>
+            </div>
+            <div class="product-info">
+                <span class="product-cat">Processadores</span>
+                <h3 class="product-title">Processador Core i7 14700KF Max</h3>
+                <div class="product-price-box">
+                    <span class="price-label">À vista no Pix</span>
+                    <div class="product-price">R$ 2.650,00</div>
+                </div>
+            </div>
+            <button class="btn-add-cart" onclick="addToCart('Processador Core i7 14700KF Max')">+ Adicionar à Sacola</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-media">
+                <span class="short-badge">▶ Short #3</span>
+                <div class="product-media-icon">🎧</div>
+                <span style="font-size: 0.75rem;">Review de Áudio</span>
+            </div>
+            <div class="product-info">
+                <span class="product-cat">Periféricos</span>
+                <h3 class="product-title">Headset Gamer Pro Surround 7.1</h3>
+                <div class="product-price-box">
+                    <span class="price-label">À vista no Pix</span>
+                    <div class="product-price">R$ 489,00</div>
+                </div>
+            </div>
+            <button class="btn-add-cart" onclick="addToCart('Headset Gamer Pro Surround 7.1')">+ Adicionar à Sacola</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-media">
+                <span class="short-badge">▶ Short #4</span>
+                <div class="product-media-icon">⌨️</div>
+                <span style="font-size: 0.75rem;">Digitação & Switch</span>
+            </div>
+            <div class="product-info">
+                <span class="product-cat">Acessórios</span>
+                <h3 class="product-title">Teclado Mecânico RGB Switch Red</h3>
+                <div class="product-price-box">
+                    <span class="price-label">À vista no Pix</span>
+                    <div class="product-price">R$ 359,90</div>
+                </div>
+            </div>
+            <button class="btn-add-cart" onclick="addToCart('Teclado Mecânico RGB Switch Red')">+ Adicionar à Sacola</button>
+        </div>
+
+        <div class="faq-block">
+            <div class="section-title">Dúvidas & Perguntas Frequentes</div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-q">📦 Como funciona o envio nacional?</div>
+                    <div class="faq-a">Todos os produtos saem com nota fiscal e seguro direto do centro de distribuição em São Paulo para qualquer estado do Brasil via transportadora expressa.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">🏢 Posso retirar na loja física?</div>
+                    <div class="faq-a">Sim! Clientes de São Paulo e região metropolitana podem escolher a opção 'Retirar na Loja Física' no momento do checkout sem custos de frete.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">🛡️ Como funciona a garantia de hardware?</div>
+                    <div class="faq-a">Garantia integral de 12 meses contra defeitos de fabricação, com suporte direto da nossa equipe técnica especializada.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h4>Game Mania</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">A sua loja de tecnologia e universo gamer direto do centro de São Paulo para todo o Brasil.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Departamentos</h4>
+                <ul>
+                    <li><a href="#">Placas de Vídeo</a></li>
+                    <li><a href="#">Processadores</a></li>
+                    <li><a href="#">Periféricos Gamer</a></li>
+                    <li><a href="#">Monitores e Telas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="#">Central de Ajuda</a></li>
+                    <li><a href="#">Rastreamento de Pedido</a></li>
+                    <li><a href="#">Trocas e Devoluções</a></li>
+                    <li><a href="#">WhatsApp Suporte</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Segurança & Pagamentos</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Pagamentos via Pix, Boleto e Cartão em até 12x.</p>
+                <span style="font-size: 1.2rem;">🔒 💳 ⚡</span>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Game Mania E-commerce Ltda. CNPJ: 00.000.000/0001-00. Centro - São Paulo / SP. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let cartTotal = 0;
+
+        function addToCart(productName) {
+            cartTotal++;
+            document.getElementById('cartCount').innerText = cartTotal;
+            showToast(`"${productName}" adicionado à sacola!`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('searchSuggestions');
+
+        searchInput.addEventListener('focus', () => {
+            suggestionsBox.style.display = 'flex';
+        });
+
+        searchInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                suggestionsBox.style.display = 'none';
+            }, 200);
+        });
+
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+                searchInput.value = this.innerText;
+                suggestionsBox.style.display = 'none';
+                showToast(`Filtrando por: ${this.innerText}`);
+            });
+        });
+    </script>
+</body>
+</html>
